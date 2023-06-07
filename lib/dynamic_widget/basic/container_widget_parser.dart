@@ -63,7 +63,7 @@ class ContainerWidgetParser extends WidgetParser {
       "padding": padding != null
           ? "${padding.left},${padding.top},${padding.right},${padding.bottom}"
           : null,
-      "color": realWidget.color != null
+      "color": realWidget.color != null && realWidget.decoration == null
           ? realWidget.color!.value.toRadixString(16)
           : null,
       "margin": margin != null

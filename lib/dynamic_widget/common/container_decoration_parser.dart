@@ -6,10 +6,11 @@ class ContainerDecorationParser {
     if (boxDecoration.borderRadius == BorderRadius.zero) {
       return null;
     }
-    final BorderRadius borderRadius =
-    boxDecoration.borderRadius as BorderRadius;
+    final BorderRadius borderRadius = boxDecoration.borderRadius as BorderRadius;
+    final Color color = boxDecoration.color as Color;
     final Map<String, dynamic> map = {
-      "borderRadius": "${exportBorderRadius(borderRadius)}"
+      "borderRadius": "${exportBorderRadius(borderRadius)}",
+      "color":color.value.toRadixString(16),
     };
     return map;
   }
@@ -20,6 +21,7 @@ class ContainerDecorationParser {
       borderRadius: parseBorderRadius(
         map['borderRadius'],
       ),
+      color: parseHexColor(map['color'])
     );
   }
 }

@@ -86,7 +86,7 @@ class DynamicWidgetBuilder {
     TextButtonParser(),
     RotatedBoxWidgetParser(),
     CardParser(),
-    SingleChildScrollViewParser()
+    SingleChildScrollViewParser(),
   ];
 
   static final _widgetNameParserMap = <String, WidgetParser>{};
