@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 
 class ContainerDecorationParser {
   static Map<String, dynamic>? export(BoxDecoration boxDecoration) {
-    if (boxDecoration.borderRadius == BorderRadius.zero) {
+    if (boxDecoration.borderRadius == BorderRadius.zero &&
+        boxDecoration.color == null &&
+        boxDecoration.border == null &&
+        boxDecoration.gradient == null &&
+        boxDecoration.backgroundBlendMode == null &&
+        boxDecoration.shape == BoxShape.rectangle &&
+        boxDecoration.image == null &&
+        boxDecoration.borderRadius == null &&
+        boxDecoration.boxShadow == null) {
       return null;
     }
     final BorderRadius borderRadius = boxDecoration.borderRadius as BorderRadius;
@@ -21,7 +29,8 @@ class ContainerDecorationParser {
       borderRadius: parseBorderRadius(
         map['borderRadius'],
       ),
-      color: parseHexColor(map['color'])
+      color: parseHexColor(map['color']) ,
+
     );
   }
 }
