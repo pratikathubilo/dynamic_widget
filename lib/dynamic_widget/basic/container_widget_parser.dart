@@ -1,4 +1,5 @@
 import 'package:dynamic_widget/dynamic_widget.dart';
+import 'package:dynamic_widget/dynamic_widget/common/container_decoration_parser.dart';
 import 'package:dynamic_widget/dynamic_widget/utils.dart';
 import 'package:flutter/widgets.dart';
 
@@ -16,7 +17,7 @@ class ContainerWidgetParser extends WidgetParser {
     Widget? child = childMap == null
         ? null
         : DynamicWidgetBuilder.buildFromMap(childMap, buildContext, listener);
-
+    final BoxDecoration? decoration = ContainerDecorationParser.parse(map['decoration']);
     String? clickEvent =
         map.containsKey("click_event") ? map['click_event'] : null;
 
@@ -28,6 +29,7 @@ class ContainerWidgetParser extends WidgetParser {
       width: map['width']?.toDouble(),
       height: map['height']?.toDouble(),
       constraints: constraints,
+      decoration: decoration,
       child: child,
     );
 
@@ -52,6 +54,7 @@ class ContainerWidgetParser extends WidgetParser {
     var padding = realWidget.padding as EdgeInsets?;
     var margin = realWidget.margin as EdgeInsets?;
     var constraints = realWidget.constraints;
+    var decoration = realWidget.decoration;
     return <String, dynamic>{
       "type": widgetName,
       "alignment": realWidget.alignment != null
@@ -68,6 +71,7 @@ class ContainerWidgetParser extends WidgetParser {
           : null,
       "constraints":
           constraints != null ? exportConstraints(constraints) : null,
+      "decoration": decoration != null ? ContainerDecorationParser.export(realWidget.decoration as BoxDecoration) : null,
       "child": DynamicWidgetBuilder.export(realWidget.child, buildContext)
     };
   }
