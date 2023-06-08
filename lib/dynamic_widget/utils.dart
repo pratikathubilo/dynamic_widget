@@ -1221,3 +1221,30 @@ LinearGradient? parseLinearGradient(Map<String, dynamic> map) {
     end: end as Alignment,
   );
 }
+
+///Export Shape in Decoration Container
+String? exportShapeInDecoration(BoxShape? boxShape) {
+  switch (boxShape) {
+    case BoxShape.circle:
+      return "circle";
+    case BoxShape.rectangle:
+      return "rectangle";
+    default:
+      return "rectangle";
+  }
+}
+
+///Parse Shape in Container Decoration
+BoxShape? parseShapeInDecoration(String? value) {
+  if (value == null) {
+    return null;
+  }
+  switch (value) {
+    case 'circle':
+      return BoxShape.circle;
+    case 'rectangle':
+      return BoxShape.rectangle;
+    default:
+      return BoxShape.rectangle;
+  }
+}
