@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:dynamic_widget/dynamic_widget.dart';
@@ -1196,7 +1197,7 @@ Radius parseRadius(String radius) {
 
 /// Export Gradient  in Container Widget
 Map<String, dynamic> exportLinearGradient(LinearGradient gradient) {
-  final List<String> colorValues = gradient.colors.map((color) => color.value.toRadixString(16)).toList();
+  final List<String> colorValues = gradient.colors.map((color) => color.value.toRadixString(16).toString()).toList();
   return {
     'colors': colorValues,
     'begin': "${exportAlignment(gradient.begin as Alignment)}" ,
@@ -1205,7 +1206,8 @@ Map<String, dynamic> exportLinearGradient(LinearGradient gradient) {
 }
 
 /// Pare Gradient in Container Widget
-LinearGradient parseLinearGradient(Map<String, dynamic> map) {
+LinearGradient? parseLinearGradient(Map<String, dynamic> map) {
+  if (  map == '') return null;
   final List<Color> colors = (map['colors'] as List<dynamic>)
       .map((value) => Color(int.parse(value, radix: 16)))
       .toList();
@@ -1215,7 +1217,7 @@ LinearGradient parseLinearGradient(Map<String, dynamic> map) {
 
   return LinearGradient(
     colors: colors,
-    begin: begin as AlignmentGeometry ,
-    end: end as AlignmentGeometry,
+    begin: begin as Alignment,
+    end: end as Alignment,
   );
 }

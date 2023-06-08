@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dynamic_widget/dynamic_widget/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class ContainerDecorationParser {
     final Map<String, dynamic> map = {
       "borderRadius": "${exportBorderRadius(borderRadius)}",
       "color":color.value.toRadixString(16),
-
+      "gradient" : exportLinearGradient(boxDecoration.gradient as LinearGradient)
     };
     return map;
   }
@@ -31,7 +33,7 @@ class ContainerDecorationParser {
         map['borderRadius'],
       ),
       color: parseHexColor(map['color']) ,
-
+      gradient: parseLinearGradient(map['gradient']) ?? null
     );
   }
 }
