@@ -19,6 +19,7 @@ class ContainerDecorationParser {
     final Map<String, dynamic> map = {
       "borderRadius": "${exportBorderRadius(borderRadius)}",
       "color":color.value.toRadixString(16),
+
     };
     return map;
   }

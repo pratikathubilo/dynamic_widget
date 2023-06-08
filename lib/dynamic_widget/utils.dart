@@ -1193,3 +1193,29 @@ Radius parseRadius(String radius) {
     return Radius.zero;
   }
 }
+
+/// Export Gradient  in Container Widget
+Map<String, dynamic> exportLinearGradient(LinearGradient gradient) {
+  final List<String> colorValues = gradient.colors.map((color) => color.value.toRadixString(16)).toList();
+  return {
+    'colors': colorValues,
+    'begin': "${exportAlignment(gradient.begin as Alignment)}" ,
+    'end':"${exportAlignment(gradient.end as Alignment)}"
+  };
+}
+
+/// Pare Gradient in Container Widget
+LinearGradient parseLinearGradient(Map<String, dynamic> map) {
+  final List<Color> colors = (map['colors'] as List<dynamic>)
+      .map((value) => Color(int.parse(value, radix: 16)))
+      .toList();
+
+   Alignment? begin = parseAlignment(map['begin']) ?? null;
+   Alignment? end = parseAlignment(map['end']) ?? null;
+
+  return LinearGradient(
+    colors: colors,
+    begin: begin as AlignmentGeometry ,
+    end: end as AlignmentGeometry,
+  );
+}
