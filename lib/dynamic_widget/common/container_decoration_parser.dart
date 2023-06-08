@@ -13,16 +13,17 @@ class ContainerDecorationParser {
         boxDecoration.backgroundBlendMode == null &&
         boxDecoration.shape == BoxShape.rectangle &&
         boxDecoration.image == null &&
-        boxDecoration.borderRadius == null &&
         boxDecoration.boxShadow == null) {
       return null;
     }
-    final BorderRadius borderRadius = boxDecoration.borderRadius as BorderRadius;
+    BorderRadius borderRadius = (boxDecoration.borderRadius != null) ? boxDecoration.borderRadius as BorderRadius : BorderRadius.zero;
     final Color color = boxDecoration.color as Color;
     final Map<String, dynamic> map = {
       "borderRadius": "${exportBorderRadius(borderRadius)}",
       "color":color.value.toRadixString(16),
       "gradient" : exportLinearGradient(boxDecoration.gradient as LinearGradient) ,
+      "shape": exportShapeInDecoration(boxDecoration.shape),
+      "border": exportBoxBorder(boxDecoration.border) ,
     };
     return map;
   }
@@ -30,11 +31,13 @@ class ContainerDecorationParser {
   static BoxDecoration? parse(Map<String, dynamic>? map) {
     if (map == null) return null;
     return BoxDecoration(
-      borderRadius: parseBorderRadius(
+      borderRadius: map['shape'] != "circle" ? parseBorderRadius(
         map['borderRadius'],
-      ),
+      ): null,
       color: parseHexColor(map['color']) ,
-      gradient: parseLinearGradient(map['gradient']) ?? null
+      gradient: parseLinearGradient(map['gradient']) ?? null ,
+      shape: parseShapeInDecoration(map['shape']),
+      border: parseBoxBorder(map['border'])
     );
   }
 }

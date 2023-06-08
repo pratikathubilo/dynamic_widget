@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:dynamic_widget/dynamic_widget.dart';
 import 'package:dynamic_widget/dynamic_widget/drop_cap_text.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 TextAlign parseTextAlign(String? textAlignString) {
@@ -1235,10 +1237,8 @@ String? exportShapeInDecoration(BoxShape? boxShape) {
 }
 
 ///Parse Shape in Container Decoration
-BoxShape? parseShapeInDecoration(String? value) {
-  if (value == null) {
-    return null;
-  }
+BoxShape parseShapeInDecoration(String? value) {
+
   switch (value) {
     case 'circle':
       return BoxShape.circle;
@@ -1247,4 +1247,66 @@ BoxShape? parseShapeInDecoration(String? value) {
     default:
       return BoxShape.rectangle;
   }
+}
+
+//
+Map<String, dynamic> exportBoxBorder(BoxBorder? border) {
+  if (border == null) return {};
+
+  if (border is Border) {
+    return {
+      'type': 'Border',
+      'top': exportBorderSide(border.top),
+      'bottom': exportBorderSide(border.bottom),
+      'left': exportBorderSide(border.left),
+      'right': exportBorderSide(border.right),
+    };
+  } else if (border is BorderDirectional) {
+    return {
+      'type': 'BorderDirectional',
+      'top': exportBorderSide(border.top),
+      'bottom': exportBorderSide(border.bottom),
+      'start': exportBorderSide(border.start),
+      'end': exportBorderSide(border.end),
+    };
+  } else  {
+    final BorderSide borderAll  = border as BorderSide;
+    return {
+      'type': 'Border.all',
+      'color': borderAll.color.value.toRadixString(16),
+      'width': borderAll.width,
+    };
+  }
+
+}
+
+BoxBorder? parseBoxBorder(Map<String, dynamic> map) {
+  if (map.isEmpty) return null;
+
+  if (map['type'] == 'Border.all') {
+    Color? color = parseHexColor(map['color']) ?? null;
+    double? width = map['width']?.toDouble() ?? null;
+
+    if (color != null && width != null) {
+      return Border.all(
+        color: color,
+        width: width,
+      );
+    }
+  } else if (map['type'] == 'Border') {
+    BorderSide? top = parseBorderSide(map['top']) ?? null;
+    BorderSide? bottom = parseBorderSide(map['bottom']) ?? null;
+    BorderSide? left = parseBorderSide(map['left']) ?? null;
+    BorderSide? right = parseBorderSide(map['right']) ?? null;
+
+    if (top != null || bottom != null || left != null || right != null) {
+      return Border(
+        top: top ?? BorderSide.none,
+        bottom: bottom ?? BorderSide.none,
+        left: left ?? BorderSide.none,
+        right: right ?? BorderSide.none,
+      );
+    }
+  }
+  return null;
 }
