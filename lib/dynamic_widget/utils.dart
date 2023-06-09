@@ -1249,7 +1249,7 @@ BoxShape parseShapeInDecoration(String? value) {
   }
 }
 
-//
+///Export Box Border
 Map<String, dynamic> exportBoxBorder(BoxBorder? border) {
   if (border == null) return {};
 
@@ -1279,7 +1279,7 @@ Map<String, dynamic> exportBoxBorder(BoxBorder? border) {
   }
 
 }
-
+///Parse Box Border
 BoxBorder? parseBoxBorder(Map<String, dynamic> map) {
   if (map.isEmpty) return null;
 

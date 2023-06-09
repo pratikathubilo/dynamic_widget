@@ -329,4 +329,10 @@ Checkout this project and run demo.
 Checkout this project and run demo.
 
 ## Contact
-Created by [@deng.yin@gmail.com](https://www.jianshu.com/u/efa51344ce61) - feel free to contact me
+Created by [@deng.yin@gmail.com](https://www.jianshu.com/u/efa51344ce61) - feel free to contact me 
+
+## Bổ sung thêm các hàm để Export Json các thuộc tính Decoration trong Container Widget (09/06/2023) 
+# Bổ sung file : lib/dynamic_widget/common/container_decoration_parser.dart. 
+Để Export Parse Decoration trong Container . 
+# Bổ sung thêm các hàm export Parse trong file utils.dart : lib/dynamic_widget/utils.dart  
+
