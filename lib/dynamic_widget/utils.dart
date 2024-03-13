@@ -77,7 +77,7 @@ TextOverflow? parseTextOverflow(String? textOverflowString) {
 }
 
 String? exportTextOverflow(TextOverflow? textOverflow) {
-  if(textOverflow == null){
+  if (textOverflow == null) {
     return null;
   }
   String rt = "ellipsis";
@@ -932,7 +932,7 @@ String exportWrapCrossAlignment(WrapCrossAlignment wrapCrossAlignment) {
 
 Clip parseClipBehavior(String? clipBehaviorString) {
   if (clipBehaviorString == null) {
-    return Clip.antiAlias;
+    return Clip.none;
   }
   switch (clipBehaviorString) {
     case "antiAlias":
@@ -1199,23 +1199,25 @@ Radius parseRadius(String radius) {
 
 /// Export Gradient  in Container Widget
 Map<String, dynamic> exportLinearGradient(LinearGradient gradient) {
-  final List<String> colorValues = gradient.colors.map((color) => color.value.toRadixString(16).toString()).toList();
+  final List<String> colorValues = gradient.colors
+      .map((color) => color.value.toRadixString(16).toString())
+      .toList();
   return {
     'colors': colorValues,
-    'begin': "${exportAlignment(gradient.begin as Alignment)}" ,
-    'end':"${exportAlignment(gradient.end as Alignment)}"
+    'begin': "${exportAlignment(gradient.begin as Alignment)}",
+    'end': "${exportAlignment(gradient.end as Alignment)}"
   };
 }
 
 /// Pare Gradient in Container Widget
 LinearGradient? parseLinearGradient(Map<String, dynamic> map) {
-  if (  map == '') return null;
+  if (map == '') return null;
   final List<Color> colors = (map['colors'] as List<dynamic>)
       .map((value) => Color(int.parse(value, radix: 16)))
       .toList();
 
-   Alignment? begin = parseAlignment(map['begin']) ?? null;
-   Alignment? end = parseAlignment(map['end']) ?? null;
+  Alignment? begin = parseAlignment(map['begin']) ?? null;
+  Alignment? end = parseAlignment(map['end']) ?? null;
 
   return LinearGradient(
     colors: colors,
@@ -1238,7 +1240,6 @@ String? exportShapeInDecoration(BoxShape? boxShape) {
 
 ///Parse Shape in Container Decoration
 BoxShape parseShapeInDecoration(String? value) {
-
   switch (value) {
     case 'circle':
       return BoxShape.circle;
@@ -1269,16 +1270,16 @@ Map<String, dynamic> exportBoxBorder(BoxBorder? border) {
       'start': exportBorderSide(border.start),
       'end': exportBorderSide(border.end),
     };
-  } else  {
-    final BorderSide borderAll  = border as BorderSide;
+  } else {
+    final BorderSide borderAll = border as BorderSide;
     return {
       'type': 'Border.all',
       'color': borderAll.color.value.toRadixString(16),
       'width': borderAll.width,
     };
   }
-
 }
+
 ///Parse Box Border
 BoxBorder? parseBoxBorder(Map<String, dynamic> map) {
   if (map.isEmpty) return null;

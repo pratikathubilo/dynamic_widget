@@ -17,7 +17,10 @@ class ContainerWidgetParser extends WidgetParser {
     Widget? child = childMap == null
         ? null
         : DynamicWidgetBuilder.buildFromMap(childMap, buildContext, listener);
-    final BoxDecoration? decoration = ContainerDecorationParser.parse(map['decoration']);
+    final BoxDecoration? decoration =
+        ContainerDecorationParser.parse(map['decoration']);
+    final BoxDecoration? foregroundDecoration =
+        ContainerDecorationParser.parse(map['foregroundDecoration']);
     String? clickEvent =
         map.containsKey("click_event") ? map['click_event'] : null;
 
@@ -30,7 +33,9 @@ class ContainerWidgetParser extends WidgetParser {
       height: map['height']?.toDouble(),
       constraints: constraints,
       decoration: decoration,
+      foregroundDecoration: foregroundDecoration,
       child: child,
+      clipBehavior: parseClipBehavior(map['clipBehavior']),
     );
 
     if (listener != null && clickEvent != null) {
@@ -55,6 +60,7 @@ class ContainerWidgetParser extends WidgetParser {
     var margin = realWidget.margin as EdgeInsets?;
     var constraints = realWidget.constraints;
     var decoration = realWidget.decoration;
+    var foregroundDecoration = realWidget.foregroundDecoration;
     return <String, dynamic>{
       "type": widgetName,
       "alignment": realWidget.alignment != null
@@ -71,8 +77,16 @@ class ContainerWidgetParser extends WidgetParser {
           : null,
       "constraints":
           constraints != null ? exportConstraints(constraints) : null,
-      "decoration": decoration != null ? ContainerDecorationParser.export(realWidget.decoration as BoxDecoration) : null,
-      "child": DynamicWidgetBuilder.export(realWidget.child, buildContext)
+      "decoration": decoration != null
+          ? ContainerDecorationParser.export(
+              realWidget.decoration as BoxDecoration)
+          : null,
+      "foregroundDecoration": foregroundDecoration != null
+          ? ContainerDecorationParser.export(
+              foregroundDecoration as BoxDecoration)
+          : null,
+      "child": DynamicWidgetBuilder.export(realWidget.child, buildContext),
+      "clipBehavior": exportClip(realWidget.clipBehavior),
     };
   }
 
