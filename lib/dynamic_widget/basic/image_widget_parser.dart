@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:dynamic_widget/dynamic_widget.dart';
 import 'package:dynamic_widget/dynamic_widget/utils.dart';
@@ -318,6 +319,137 @@ class NetworkImageWidgetParser extends WidgetParser {
       if (widget.image is ResizeImage) {
         var t = widget.image as ResizeImage;
         return t.imageProvider is NetworkImage;
+      }
+    }
+    return false;
+  }
+}
+
+class FileImageWidgetParser extends WidgetParser {
+  @override
+  Widget parse(Map<String, dynamic> map, BuildContext buildContext,
+      ClickListener? listener) {
+    File src = File(map['filePath'] as String);
+    String? semanticLabel =
+        map.containsKey('semanticLabel') ? map['semanticLabel'] : null;
+    bool excludeFromSemantics = map.containsKey('excludeFromSemantics')
+        ? map['excludeFromSemantics']
+        : false;
+    double scale = map.containsKey("scale") ? map['scale']?.toDouble() : 1.0;
+    double? width = map.containsKey('width') ? map['width']?.toDouble() : null;
+    double? height =
+        map.containsKey('height') ? map['height']?.toDouble() : null;
+    Color? color =
+        map.containsKey('color') ? parseHexColor(map['color']) : null;
+    BlendMode? colorBlendMode = map.containsKey('colorBlendMode')
+        ? parseBlendMode(map['colorBlendMode'])
+        : null;
+    BoxFit? fit = map.containsKey('fit') ? parseBoxFit(map['fit']) : null;
+    Alignment alignment = map.containsKey('alignment')
+        ? parseAlignment(map['alignment'])!
+        : Alignment.center;
+    ImageRepeat repeat = map.containsKey('repeat')
+        ? parseImageRepeat(map['repeat'])!
+        : ImageRepeat.noRepeat;
+    Rect? centerSlice =
+        map.containsKey('centerSlice') ? parseRect(map['centerSlice']) : null;
+    bool matchTextDirection = map.containsKey('matchTextDirection')
+        ? map['matchTextDirection']
+        : false;
+    bool gaplessPlayback =
+        map.containsKey('gaplessPlayback') ? map['gaplessPlayback'] : false;
+    FilterQuality filterQuality = map.containsKey('filterQuality')
+        ? parseFilterQuality(map['filterQuality'])!
+        : FilterQuality.low;
+
+    String? clickEvent =
+        map.containsKey("click_event") ? map['click_event'] : "";
+
+    var widget = Image.file(
+      src,
+      semanticLabel: semanticLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      scale: scale,
+      width: width,
+      height: height,
+      color: color,
+      colorBlendMode: colorBlendMode,
+      fit: fit,
+      alignment: alignment,
+      repeat: repeat,
+      centerSlice: centerSlice,
+      matchTextDirection: matchTextDirection,
+      gaplessPlayback: gaplessPlayback,
+      filterQuality: filterQuality,
+    );
+
+    if (listener != null && (clickEvent != null && clickEvent.isNotEmpty)) {
+      return GestureDetector(
+        onTap: () {
+          listener.onClicked(clickEvent);
+        },
+        child: widget,
+      );
+    }
+    return widget;
+  }
+
+  @override
+  String get widgetName => "FileImage";
+
+  @override
+  Map<String, dynamic> export(Widget? widget, BuildContext? buildContext) {
+    var realWidget = widget as Image;
+    late FileImage fileImage;
+    if (realWidget.image is FileImage) {
+      fileImage = realWidget.image as FileImage;
+    } else if (realWidget.image is ResizeImage) {
+      var t = realWidget.image as ResizeImage;
+      fileImage = t.imageProvider as FileImage;
+    }
+    return <String, dynamic>{
+      "type": widgetName,
+      "filePath": fileImage.file.path,
+      "semanticLabel": realWidget.semanticLabel,
+      "excludeFromSemantics": realWidget.excludeFromSemantics,
+      "width": realWidget.width,
+      "height": realWidget.height,
+      "color": realWidget.color != null
+          ? realWidget.color!.value.toRadixString(16)
+          : null,
+      "colorBlendMode": realWidget.colorBlendMode != null
+          ? exportBlendMode(realWidget.colorBlendMode)
+          : null,
+      "fit": realWidget.fit != null ? exportBoxFit(realWidget.fit) : null,
+      "alignment": realWidget.alignment != null
+          ? exportAlignment(realWidget.alignment as Alignment?)
+          : null,
+      "repeat": realWidget.repeat != null
+          ? exportImageRepeat(realWidget.repeat)
+          : null,
+      "centerSlice": realWidget.centerSlice != null
+          ? exportRect(realWidget.centerSlice!)
+          : null,
+      "matchTextDirection": realWidget.matchTextDirection,
+      "gaplessPlayback": realWidget.gaplessPlayback,
+      "filterQuality": realWidget.filterQuality != null
+          ? exportFilterQuality(realWidget.filterQuality)
+          : null
+    };
+  }
+
+  @override
+  Type get widgetType => FileImage;
+
+  @override
+  bool matchWidgetForExport(Widget? widget) {
+    if (widget is Image) {
+      if (widget.image is FileImage) {
+        return true;
+      }
+      if (widget.image is ResizeImage) {
+        var t = widget.image as ResizeImage;
+        return t.imageProvider is FileImage;
       }
     }
     return false;
